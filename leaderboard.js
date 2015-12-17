@@ -163,8 +163,8 @@ if (Meteor.isClient) {
       return bools;
     },
 
-    showStats: function(){
-      return Session.get('showStats');
+    showSettings: function(){
+      return Session.get('showSettings');
     }
 
   });
@@ -202,12 +202,13 @@ if (Meteor.isClient) {
       $("#leaderboard").load(location.href + " #leaderboard");
     },
 
-    'click .showStats': function () {
-        Session.set("showStats", true);   
+    'click .showSettings': function () {
+        Session.set("showSettings", true);
+        console.log("SHOW")   
     },
 
-    'click .hideStats': function () {
-        Session.set("showStats", false);   
+    'click .hideSettings': function () {
+        Session.set("showSettings", false);   
     },
  
     'click .yes': function () {
@@ -266,18 +267,44 @@ if (Meteor.isClient) {
       });
 
       $("#leaderboard").load(location.href + " #leaderboard");
+    },
+
+    'click .heart': function () {
+      console.log('you heart it!');
     }
+  
   });
+
 
   Template.article.helpers({
     selected: function () {
       return Session.equals("selectedArticle", this._id) ? "selected" : '';
     }
   });  
+
+
+  Template.settings.events({
+   'submit #settings-form' : function (event, template) {
+     event.preventDefault();
+
+     var selected = template.findAll( "input[type=checkbox]:checked");
+
+     var array = _.map(selected, function(item) {
+       return item.defaultValue;
+     });
+     Meteor.users.update({_id:Meteor.user()._id}, { $set: {'profile.topics': array} });
+
+     console.log(Meteor.user().profile['topics']);
+
+   }
+  });
+
+
  }
 
 // On server startup, get last 20 articles
 if (Meteor.isServer) {
+ 
 
     Meteor.publish('theArticles', function(){
       var currentUserId = this.userId; 

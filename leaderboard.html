@@ -9,8 +9,7 @@
      
   <div class="outer">
     {{> loginButtons}}
-
-    <button class="showStats">S T A T S</button>  
+ 
 
     <div class="logo"></div>
     <h1 class="title">SORTING HAT</h1>
@@ -27,6 +26,7 @@
      
   {{#if currentUser}} <!-- gotta be logged in -->
 
+
     <!-- progress bar is always at the top -->
     <div class="progress">
       <div class="progress-bar" role="progressbar" aria-valuenow={{completeCount}}
@@ -36,6 +36,7 @@
       </div>  
     </div> 
  
+    <button class="showSettings">SETTINGS</button>  
 
 
     <!-- Admin always has opp to insert more. -->
@@ -86,45 +87,20 @@
    {{/if}} <!-- end "allDone" -->
 
 
-    {{#if showStats}}
+    {{#if showSettings}}
 
-      <button class="hideStats">Go Back to Reading</button>  
-      <center> 
+      <button class="hideSettings">Go Back to Reading</button>  
+      <center> <h2>SETTINGS</h2> 
+      <h2> What sort of stories do you want to read?</h2>
 
-        <h2>OVERVIEW</h2>
-        <h2> You've read {{completeCount}} articles. Great work! </h2>
-        <p>{{numTrue}} articles were U.S. Election related, and {{numFalse}} articles were unrelated.</p> 
-
-
-        <p>Sorting Hat thought {{numMachineTrue}} articles were U.S. Election related, and {{numMachineFalse}} articles were unrelated.</p> 
-
-
-        <p>Machine False Positives: {{falsePosCount}}</p> 
-        <p>Machine False Negatives: {{falseNegCount}}</p> 
-  
-        <h2>CORRECTIONS</h2>
-        <!--
-        {{#each corrections}}
-          {{> result}}
-        {{/each}} 
-        -->
-  
-        {{#each falsePos}}
-          {{> result}}
-        {{/each}}
- 
-        {{#each falseNeg}}
-         {{> result}} 
-        {{/each}}
-     
       </center>
 
+
+      {{> settings}}  
+
     {{else}} <!-- allDone --> 
-      <!-- otherwise business as usual --> 
-
+      <!-- otherwise business as usual -->  
       {{#each articles}} 
-
- 
 
        {{> article}}
   
@@ -147,16 +123,17 @@
 </template>
 
  
-<template name="article">
-
+<template name="article">   
+  <center><h1> Is this story about {{topics}} ?</h1></center>
  
 
-  <center><h1> Is this story about {{topics}} ?</h1></center> 
   <div class="details">  
-   <button class="no">N O</button>
-  <button class="yes">Y E S</button>  
-        </div>  
+    <button class="no">N O</button>
+    <button class="yes">Y E S</button>  
+
+  </div>  
   <ul class="article {{selected}}">    
+    <button class="heart">&starf;</button>  
 
     <center><img src="/img/names/{{org}}.png" height="100px" ></center>
     <span class="name">{{{title}}}</span>   
@@ -187,3 +164,32 @@
   </ul>
 </template>
  
+
+
+<template name="settings">
+  <form id="settings-form" action="action">
+ 
+   <input type="checkbox" name="owns" value="Foreign Policy/National Security">Foreign Policy/National Security<br/>
+   <input type="checkbox" name="owns" value="Immigration">Immigration<br/>
+   <input type="checkbox" name="owns" value="Environment/Energy">Environment/Energy<br/>
+   <input type="checkbox" name="owns" value="Economy">Economy<br/>
+   <input type="checkbox" name="owns" value="LGBT Issues">LGBT Issues<br/>
+   <input type="checkbox" name="owns" value="Health Care">Health Care<br/>
+   <input type="checkbox" name="owns" value="Abortion">Abortion<br/>
+   <input type="checkbox" name="owns" value="Jobs/Employment">Jobs/Employment<br/>
+   <input type="checkbox" name="owns" value="Justice">Justice<br/>
+   <input type="checkbox" name="owns" value="Guns">Guns<br/>
+   <input type="checkbox" name="owns" value="Surveillance/Privacy">Surveillance/Privacy<br/>
+   <input type="checkbox" name="owns" value="Budget/Taxation">Budget/Taxation<br/>
+   <input type="checkbox" name="owns" value="Trade">Trade<br/>
+   <input type="checkbox" name="owns" value="Campaign Finance">Campaign Finance<br/>
+   <input type="checkbox" name="owns" value="Racial Issues">Racial Issues<br/>
+   <input type="checkbox" name="owns" value="Education">Education<br/>
+   <input type="checkbox" name="owns" value="Drugs">Drugs<br/>
+   <input type="checkbox" name="owns" value="Income Inequality">Income Inequality<br/>
+   <input type="checkbox" name="owns" value="Financial Regulation">Financial Regulartion<br/>
+   <input type="checkbox" name="owns" value="Ethics">Ethics<br/>
+   <input type="checkbox" name="owns" value="Personality">Personality<br/>
+   <input type="submit"  value="send" />
+ </form>  
+</template>
