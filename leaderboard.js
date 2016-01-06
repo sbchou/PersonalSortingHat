@@ -5,7 +5,6 @@ Articles = new Mongo.Collection("articles");
 Labels = new Mongo.Collection("labels");
 
 
-
 if (Meteor.isClient) { 
   var width = $(window).width() - 25; 
   $("#outer").width(width);
@@ -39,6 +38,16 @@ if (Meteor.isClient) {
     }
   })
 
+  //EMail shit
+
+  // In your client code: asynchronously send an email
+  Meteor.call('sendEmail',
+            'sbchou@gmail.com',
+            'bob@example.com',
+            'Hello from Meteor!',
+            'This is a test of Email.send.');
+
+
   // HANDLEBAR HELPERS!
   Template.registerHelper("DateString", function(timestamp) {
     var date = new Date(timestamp);
@@ -53,15 +62,21 @@ if (Meteor.isClient) {
   Template.leaderboard.helpers({
 
     articles: function () {
-      var currentUserId = Meteor.userId(); 
-      // objects we haven't labeled yet. does this work?
-      //IF NO MORE LEFT
-      p = Articles.findOne({'body':{$ne:''}, 'user_ids':{$ne:currentUserId}, 'topics':{$exists:true,  $not: {$size: 0}}});
+      var currentUserId = Meteor.userId();    
+
+      p = Articles.findOne({'body':{$ne:''},
+            'user_ids':{$ne:currentUserId},
+            'topics':{$exists:true,$not: {$size: 0},
+                     $in: Meteor.user().profile.topics}});
+
+
+      /*p = Articles.findOne({'body':{$ne:''}, 'user_ids':{$ne:currentUserId}, 'topics':{$exists:true,  $not: {$size: 0}}});*/
       if(typeof p === 'undefined'){
         console.log('NO MORE ARTICLES'); 
-        return [];
+        Session.set("allDone", true);
       }
       else{      
+        Session.set("allDone", false); 
         Session.set("selectedArticle", p._id);   
         return [ p ];
       }
@@ -76,7 +91,8 @@ if (Meteor.isClient) {
     },
 
     allDone: function (){
-    return Articles.find({'user_ids':{$ne : Meteor.userId()}, body:{$ne:''}}).count() === 0;
+      return Session.get("allDone");
+    //return Articles.find({'user_ids':{$ne : Meteor.userId()}, body:{$ne:''}}).count() === 0;
     },
 
     selectedArticle: function () {
@@ -87,12 +103,20 @@ if (Meteor.isClient) {
     completeCount: function (){
       return Articles.find({'user_ids': Meteor.userId()}).count()
     },
-    totalCount: function (){
-      return Articles.find({}).count()
+    totalCount: function (){ 
+      return Articles.find({'body':{$ne:''},
+            'user_ids':{$ne:Meteor.userId()},
+            'topics':{$exists:true,$not: {$size: 0},
+                     $in: Meteor.user().profile.topics}}).count(); 
+      //return Articles.find({}).count()
     },
     percent_complete: function(){
       var completed = Articles.find({'user_ids': Meteor.userId()}).count();
-      var total = Articles.find({'body':{$ne:''}}).count();
+      //var total = Articles.find({'body':{$ne:''}}).count();
+      var total = Articles.find({'body':{$ne:''},
+            'user_ids':{$ne:Meteor.userId()},
+            'topics':{$exists:true,$not: {$size: 0},
+                     $in: Meteor.user().profile.topics}}).count(); 
       return Math.round(( completed / total ) * 100);
     },
 
@@ -302,16 +326,45 @@ if (Meteor.isClient) {
 
  }
 
-// On server startup, get last 20 articles
-if (Meteor.isServer) {
  
+
+// On server startup, get last 20 articles
+if (Meteor.isServer) { 
+    process.env.MAIL_URL = "smtp://postmaster@sandboxe30f4a212c2043d98e278fb247831889.mailgun.org:4439319b0ce107ef952c6515064a81b8@smtp.mailgun.org:587";
+
+    // In your server code: define a method that the client can call
+    Meteor.methods({
+      sendEmail: function (to, from, subject, text) {
+        check([to, from, subject, text], [String]);
+
+        // Let other method calls from the same client start running,
+        // without waiting for the email sending to complete.
+        this.unblock();
+
+        Email.send({
+          to: to,
+          from: from,
+          subject: subject,
+          text: text
+        });
+      }
+    });
+    /*
+    Email.send({
+      to: "sbchou@gmail.com",
+      from: "sortinghat@sortinghat.com",
+      subject: "Test",
+      text: "Hello World"
+    });
+*/
+     
 
     Meteor.publish('theArticles', function(){
       var currentUserId = this.userId; 
       //return Articles.find({}); 
-      //return Articles.find({'user_id':{$ne : currentUserId}, body:{$ne:''}}, {skip:0, limit: 20}); 
+      return Articles.find({'user_id':{$ne : currentUserId}, body:{$ne:''}}, {sort: {date_written: -1 }}); 
       //n o limit
-      return Articles.find({'user_id':{$ne : currentUserId}, body:{$ne:''}}); 
+      //return Articles.find({'user_id':{$ne : currentUserId}, body:{$ne:''}}); 
     });
 
     Meteor.publish('theLabels', function(){

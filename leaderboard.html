@@ -140,8 +140,8 @@
     <span class="date">{{DateString date_written}}</span>  
     <span class="date"><a href="{{url}}" target="_blank">Read the whole story</a></span> 
  
-
-    <span class="description">{{{body_with_entities}}}</span>  
+    <span class="description">{{description}}</span>
+    <!--<span class="description">{{{body_with_entities}}}</span>-->
  
 
   </ul>
@@ -167,29 +167,33 @@
 
 
 <template name="settings">
+  Your current topic selections:
+
+  {{currentUser.profile.topics}}
+
   <form id="settings-form" action="action">
  
-   <input type="checkbox" name="owns" value="Foreign Policy/National Security">Foreign Policy/National Security<br/>
-   <input type="checkbox" name="owns" value="Immigration">Immigration<br/>
-   <input type="checkbox" name="owns" value="Environment/Energy">Environment/Energy<br/>
-   <input type="checkbox" name="owns" value="Economy">Economy<br/>
-   <input type="checkbox" name="owns" value="LGBT Issues">LGBT Issues<br/>
-   <input type="checkbox" name="owns" value="Health Care">Health Care<br/>
-   <input type="checkbox" name="owns" value="Abortion">Abortion<br/>
-   <input type="checkbox" name="owns" value="Jobs/Employment">Jobs/Employment<br/>
-   <input type="checkbox" name="owns" value="Justice">Justice<br/>
-   <input type="checkbox" name="owns" value="Guns">Guns<br/>
-   <input type="checkbox" name="owns" value="Surveillance/Privacy">Surveillance/Privacy<br/>
-   <input type="checkbox" name="owns" value="Budget/Taxation">Budget/Taxation<br/>
-   <input type="checkbox" name="owns" value="Trade">Trade<br/>
-   <input type="checkbox" name="owns" value="Campaign Finance">Campaign Finance<br/>
-   <input type="checkbox" name="owns" value="Racial Issues">Racial Issues<br/>
-   <input type="checkbox" name="owns" value="Education">Education<br/>
-   <input type="checkbox" name="owns" value="Drugs">Drugs<br/>
-   <input type="checkbox" name="owns" value="Income Inequality">Income Inequality<br/>
-   <input type="checkbox" name="owns" value="Financial Regulation">Financial Regulartion<br/>
-   <input type="checkbox" name="owns" value="Ethics">Ethics<br/>
-   <input type="checkbox" name="owns" value="Personality">Personality<br/>
+   <input type="checkbox" name="owns" value="foreign policy/national security">foreign policy/national security<br/>
+   <input type="checkbox" name="owns" value="immigration">immigration<br/>
+   <input type="checkbox" name="owns" value="environment/energy">environment/energy<br/>
+   <input type="checkbox" name="owns" value="economy">economy<br/>
+   <input type="checkbox" name="owns" value="lgbt issues">lgbt issues<br/>
+   <input type="checkbox" name="owns" value="health care">health care<br/>
+   <input type="checkbox" name="owns" value="abortion">abortion<br/>
+   <input type="checkbox" name="owns" value="jobs/employment">jobs/employment<br/>
+   <input type="checkbox" name="owns" value="justice">justice<br/>
+   <input type="checkbox" name="owns" value="guns">guns<br/>
+   <input type="checkbox" name="owns" value="surveillance/privacy">surveillance/privacy<br/>
+   <input type="checkbox" name="owns" value="budget/taxation">budget/taxation<br/>
+   <input type="checkbox" name="owns" value="trade">trade<br/>
+   <input type="checkbox" name="owns" value="campaign finance">campaign finance<br/>
+   <input type="checkbox" name="owns" value="racial issues">racial issues<br/>
+   <input type="checkbox" name="owns" value="education">education<br/>
+   <input type="checkbox" name="owns" value="drugs">drugs<br/>
+   <input type="checkbox" name="owns" value="income inequality">income inequality<br/>
+   <input type="checkbox" name="owns" value="financial regulation">financial regulartion<br/>
+   <input type="checkbox" name="owns" value="ethics">ethics<br/>
+   <input type="checkbox" name="owns" value="personality">personality<br/>
    <input type="submit"  value="send" />
  </form>  
 </template>
