@@ -41,12 +41,13 @@ if (Meteor.isClient) {
   //EMail shit
 
   // In your client code: asynchronously send an email
-  Meteor.call('sendEmail',
+  /*Meteor.call('sendEmail',
             'sbchou@gmail.com',
             'bob@example.com',
             'Hello from Meteor!',
             'This is a test of Email.send.');
 
+  */
 
   // HANDLEBAR HELPERS!
   Template.registerHelper("DateString", function(timestamp) {
@@ -295,6 +296,15 @@ if (Meteor.isClient) {
 
     'click .heart': function () {
       console.log('you heart it!');
+    },
+
+    'click .email': function () {
+      Meteor.call('sendEmail',
+            'sbchou@gmail.com',
+            'wizard@sortinghat.com',
+            'Hello from Sorting Hat!',
+            'Hello World!');
+      console.log('you sent an email!');
     }
   
   });
