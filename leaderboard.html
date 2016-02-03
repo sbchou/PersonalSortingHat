@@ -5,15 +5,25 @@
 </head>
 
 <body>
+
+
+<ul>
+  <li><a class="active" href="#home">Home</a></li>
+  <li><a href="#news">News</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="#about">About</a></li>
+</ul>
+
+
   <div id="container"></div>
      
   <div class="outer">
     {{> loginButtons}}
  
 
-    <div class="logo"></div>
-    <h1 class="title">SORTING HAT</h1>
- 
+    <!--<div class="logo"></div>-->
+    <h1 class="title">Reading Room &hearts;</h1>
+       
     {{> leaderboard}}  
  
   </div>
@@ -25,9 +35,8 @@
  
      
   {{#if currentUser}} <!-- gotta be logged in -->
-
-
-    <!-- progress bar is always at the top -->
+ 
+    <!-- progress bar is always at the top  
     <div class="progress">
       <div class="progress-bar" role="progressbar" aria-valuenow={{completeCount}}
         aria-valuemin="0" aria-valuemax="100" style="width:{{percent_complete}}%">
@@ -35,8 +44,9 @@
 
       </div>  
     </div> 
+    -->
  
-    <button class="showSettings">SETTINGS</button>  
+    <!--<button class="showSettings">SETTINGS</button>-->
 
 
     <!-- Admin always has opp to insert more. -->
@@ -59,29 +69,8 @@
     {{#if allDone}}
       <center>
 
-      <h2>Wow! You've read all the articles for today!</h2>
-      <h2>Super Job!</h2>
-
-      <h2>OVERVIEW</h2>
-        <h2> You've read {{completeCount}} articles. Great work! </h2>
-        <p>{{numTrue}} articles were U.S. Election related, and {{numFalse}} articles were unrelated.</p> 
-
-
-        <p>Sorting Hat thought {{numMachineTrue}} articles were U.S. Election related, and {{numMachineFalse}} articles were unrelated.</p> 
-
-
-        <p>Machine False Positives: {{falsePosCount}}</p> 
-        <p>Machine False Negatives: {{falseNegCount}}</p> 
-  
-        <h2>CORRECTIONS</h2>
-         {{#each falsePos}}
-          {{> result}}
-        {{/each}}
-
-
-         {{#each falseNeg}}
-          {{> result}}
-        {{/each}}
+      <h2> That's it for today's delivery! </h2>
+      <h2> Remember to leave feedback to keep the stories coming :) </h2>
        
       </center>
    {{/if}} <!-- end "allDone" -->
@@ -114,39 +103,33 @@
 
   {{else}} <!-- not logged in!-->
   <center>
-    <h1>Welcome human!</h1>
-    <p><h2>Can you teach Sorting Hat about the election?</h2></p>
-    <p><h2>Catch up on recent news stories about the election  
-    from top news outlets nation-wide, and help train our algorithm!</h2> </p> 
+    <h1>Welcome!</h1>
+    <p> Sign in, or sign up to unlock your stories!</p>
   </center>
   {{/if}}<!-- end if for logged-in-->
 </template>
 
  
 <template name="article">   
+  <!--
   <center><h1> Is this story about {{topics}} ?</h1></center>
+  -->
+
  
+  <ul class="article {{selected}}">     
+
+    <span class="name">{{{title}}}</span>
+    <!--<button class="heart">&hearts;</button> --> 
+
+    <span class="date">3 min</span>  
+    <span class="description">{{body}}</span>   
+ 
+  </ul>
 
   <div class="details">  
-    <button class="no">N O</button>
-    <button class="yes">Y E S</button>  
-
-  </div>  
-  <ul class="article {{selected}}">    
-    <button class="heart">&hearts;</button> 
-
-    <button class="email">&starf;</button>  
-
-    <center><img src="/img/names/{{org}}.png" height="100px" ></center>
-    <span class="name">{{{title}}}</span>   
-    <span class="date">{{DateString date_written}}</span>  
-    <span class="date"><a href="{{url}}" target="_blank">Read the whole story</a></span> 
- 
-    <span class="description">{{description}}</span>
-    <!--<span class="description">{{{body_with_entities}}}</span>-->
- 
-
-  </ul>
+    <!--<button class="no">N O</button>-->
+    <button class="yes">&#8594;</button>  
+  </div>
 </template>
  
 

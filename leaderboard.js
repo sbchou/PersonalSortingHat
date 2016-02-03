@@ -37,17 +37,7 @@ if (Meteor.isClient) {
       }, 200);
     }
   })
-
-  //EMail shit
-
-  // In your client code: asynchronously send an email
-  /*Meteor.call('sendEmail',
-            'sbchou@gmail.com',
-            'bob@example.com',
-            'Hello from Meteor!',
-            'This is a test of Email.send.');
-
-  */
+ 
 
   // HANDLEBAR HELPERS!
   Template.registerHelper("DateString", function(timestamp) {
@@ -66,12 +56,12 @@ if (Meteor.isClient) {
       var currentUserId = Meteor.userId();    
 
       p = Articles.findOne({'body':{$ne:''},
-            'user_ids':{$ne:currentUserId},
-            'topics':{$exists:true,$not: {$size: 0},
-                     $in: Meteor.user().profile.topics}});
+            'user_ids':{$ne:currentUserId}},
+            //'topics':{$exists:true,$not: {$size: 0},
+            //         $in: Meteor.user().profile.topics}},
+            {sort: { timestamp: -1 }, skip:0});
 
-
-      /*p = Articles.findOne({'body':{$ne:''}, 'user_ids':{$ne:currentUserId}, 'topics':{$exists:true,  $not: {$size: 0}}});*/
+ 
       if(typeof p === 'undefined'){
         console.log('NO MORE ARTICLES'); 
         Session.set("allDone", true);
@@ -79,7 +69,7 @@ if (Meteor.isClient) {
       else{      
         Session.set("allDone", false); 
         Session.set("selectedArticle", p._id);   
-        return [ p ];
+        return [p] ;
       }
     },
 
@@ -236,7 +226,11 @@ if (Meteor.isClient) {
         Session.set("showSettings", false);   
     },
  
-    'click .yes': function () {
+
+    // add a "next" button
+
+
+    'click .yes': function () { 
 
       id = Date.now().toString().substr(4);
       article_title = Articles.find( {_id:Session.get("selectedArticle")}).map(function(x) { return x.title;});
@@ -300,14 +294,18 @@ if (Meteor.isClient) {
 
     'click .email': function () {
       var topics = Meteor.user().profile['topics'];
-
+      var html = '';
+      for (var i = 0; i < topics.length; i++) {
+        html += topics[i] + "<br>";
+      }
+ 
 
       Meteor.call('sendEmail',
             'sbchou@gmail.com',
-            'wizard@sortinghat.com',
-            'Hello from Sorting Hat!',
+            'letter@sortinghat.com',
+            "Today's News",
             'Hello world',
-            'Test html <a href="http://sophiechou.com">test</a>');
+             html)
       console.log('you sent an email!');
     }
   
@@ -374,9 +372,7 @@ if (Meteor.isServer) {
 
     // In your server code: define a method that the client can call
     Meteor.methods({
-
-
-
+ 
 
       sendEmail: function (to, from, subject, text, html) {
         check([to, from, subject, text, html], [String]);
@@ -393,16 +389,7 @@ if (Meteor.isServer) {
           html: html
         });
       }
-    });
-    /*
-    Email.send({
-      to: "sbchou@gmail.com",
-      from: "sortinghat@sortinghat.com",
-      subject: "Test",
-      text: "Hello World"
-    });
-*/
-     
+    });  
 
     Meteor.publish('theArticles', function(){
       var currentUserId = this.userId; 

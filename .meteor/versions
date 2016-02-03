@@ -32,6 +32,7 @@ insecure@1.0.3
 jquery@1.11.3_2
 jquery-csv@0.0.0
 json@1.0.3
+keiths:octicons@1.2.2
 keybindings@0.0.0
 launch-screen@1.0.2
 less@1.0.14
